@@ -5,10 +5,10 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract CommunityCoin is ERC20, AccessControl {
-    event Converted(address indexed _convertor, address indexed _for, uint256 _value);
-    event TransferredFunds(address indexed _transferer, address _to);
+import "../contracts/MVP_FundsTransferable.sol";
 
+contract CommunityCoin is ERC20, AccessControl, FundsTransferable {
+    event Converted(address indexed _convertor, address indexed _for, uint256 _value);
     bytes32 public constant CONVERTER_ROLE = keccak256("CONVERTER_ROLE");
 
     function convertFor(address cMember) public payable onlyRole(CONVERTER_ROLE) returns (bool) { // Note: Public instead of external so we can test.
@@ -18,13 +18,6 @@ contract CommunityCoin is ERC20, AccessControl {
 
         emit Converted(msg.sender, cMember, msg.value);
 
-        return true;
-    }
-
-    function transferFundsTo(address payable to) public onlyRole(DEFAULT_ADMIN_ROLE) returns (bool) {
-        to.transfer(address(this).balance);
-
-        emit TransferredFunds(msg.sender, to);
         return true;
     }
 

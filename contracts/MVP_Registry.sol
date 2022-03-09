@@ -5,7 +5,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract CommunityRegistry is ERC721, AccessControl {
+import "../contracts/MVP_FundsTransferable.sol";
+
+contract CommunityRegistry is ERC721, AccessControl, FundsTransferable {
     event membershipGranted(address indexed _by, address indexed _to);
 
     bytes32 public constant GRANTER_ROLE = keccak256("GRANTER_ROLE");
