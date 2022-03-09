@@ -4,7 +4,6 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "hardhat/console.sol"; // For printing.
 
 contract CommunityCoin is ERC20, AccessControl {
     event Converted(address indexed _convertor, address indexed _for, uint256 _value);
@@ -14,7 +13,6 @@ contract CommunityCoin is ERC20, AccessControl {
 
     function convertFor(address cMember) public payable onlyRole(CONVERTER_ROLE) returns (bool) { // Note: Public instead of external so we can test.
         require(msg.value > 1 ether, "Value should be over an ether (dealing in COMS).");
-        console.log('msg.value: %s', msg.value);
 
         _mint(cMember, msg.value);
 
