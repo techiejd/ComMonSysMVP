@@ -98,4 +98,14 @@ describe("CommunityOnboarding contract", function () {
         await expect(communityOnboarding.connect(a1).onboard(a2.address)).to.emit(
                 communityOnboarding, "memberOnboarded").withArgs(a1.address, a2.address);
     });
+
+    it("should return true, memberID and voterID on success", async function () {
+        big1 = ethers.BigNumber.from(1);
+
+        await communityOnboarding.grantRole(onboarderRole, a1.address);
+
+        // Using callStatic so we can actually check the supposed return value.
+        expect(await communityOnboarding.connect(a1).callStatic.onboard(a2.address)).
+        to.be.eql([true, big1, big1]);
+    });
 });

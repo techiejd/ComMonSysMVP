@@ -60,23 +60,18 @@ describe("CommunityCoin contract", function () {
 
     it("should convert eth (COMS) to community coin token", async function () {
         await communityCoin.grantRole(converterRole, a1.address);
+        expect(await communityCoin.balanceOf(a2.address)).to.equal(0);
 
         await communityCoin.connect(a1).convertFor(a2.address, {value: sendValue});
 
         expect(await communityCoin.balanceOf(a2.address)).to.equal(sendValue);
     });
 
-    it("should protect transferFunds from anyone not w/ DEFAULT_ADMIN_ROLE", async function () {
-        expectedErrorMessage = "AccessControl: account " + 
-        a1.address.toString().toLowerCase()
-        + " is missing role " + defaultAdminRole;
+    it("should return true on success.", async function () {
+        await communityCoin.grantRole(converterRole, a1.address);
 
-        await expect(communityCoin.connect(a1).transferFundsTo(a1.address)).to.be.revertedWith(
-            expectedErrorMessage);
-    });
-
-    it("should emit a message stating who transferred.", async function () {
-        await expect(communityCoin.transferFundsTo(a1.address)).to.emit(communityCoin, "TransferredFunds").
-        withArgs(deployer.address, a1.address);
+        // Using callStatic so we can actually check the supposed return value.
+        expect(await communityCoin.connect(a1).callStatic.convertFor(a2.address,
+            {value: sendValue})).to.be.true;
     });
 });

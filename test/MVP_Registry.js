@@ -66,4 +66,12 @@ describe("CommunityRegistry contract", function () {
 
         expect(await communityRegistry.balanceOf(a2.address)).to.be.equal(1);
     });
+
+    it("should return the true and member registry ID on success", async function () {
+        await communityRegistry.grantRole(registererRole, a1.address);
+
+        // Using callStatic so we can actually check the supposed return value.
+        expect(await communityRegistry.connect(a1).callStatic.grantMembershipTo(
+            a2.address, {value: sendValue})).to.be.eql([true, ethers.BigNumber.from(1)]);
+    })
 });

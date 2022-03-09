@@ -43,4 +43,9 @@ describe("FundsTransferable contract", function () {
 
         expect(await ethers.provider.getBalance(a1.address)).to.equal(og_balance.add(sendValue));
     });
+
+    it("should return true on transfering funds", async function () {
+        // Using callStatic so we can actually check the supposed return value.
+        expect(await fundsTransferableImpl.callStatic.transferFundsTo(a1.address)).to.be.true;
+    })
 });

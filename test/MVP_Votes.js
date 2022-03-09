@@ -59,11 +59,18 @@ describe("CommunityVotes contract", function () {
         expect(await communityVotes.balanceOf(a2.address)).to.be.equal(1);
     });
 
-    it("should grant membership by NFT", async function () {
+    it("should grant votes by NFT", async function () {
         await communityVotes.grantRole(granterRole, a1.address);
 
         await communityVotes.connect(a1).grantVotesTo(a2.address, {value: sendValue});
 
         expect(await communityVotes.balanceOf(a2.address)).to.be.equal(1);
+    });
+
+    it("should return true and voting id", async function () {
+        await communityVotes.grantRole(granterRole, a1.address);
+
+        expect(await communityVotes.connect(a1).callStatic.grantVotesTo(
+            a2.address, {value: sendValue})).to.be.eql([true, ethers.BigNumber.from(1)]);
     });
 });
