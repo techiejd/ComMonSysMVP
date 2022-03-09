@@ -7,7 +7,7 @@ describe("CommunityRegistry contract", function () {
     let deployer;
     let a1;
     let a2;
-    let granterRole;
+    let registererRole;
     let defaultAdminRole;
 
     const sendValue = ethers.utils.parseEther('120000');
@@ -18,7 +18,7 @@ describe("CommunityRegistry contract", function () {
         CommunityRegistryFactory = await ethers.getContractFactory("CommunityRegistry");
 
         communityRegistry = await CommunityRegistryFactory.deploy("Test Registry", "TR");
-        granterRole = await communityRegistry.GRANTER_ROLE();
+        registererRole = await communityRegistry.REGISTERER_ROLE();
         defaultAdminRole = await communityRegistry.DEFAULT_ADMIN_ROLE();
 
         await communityRegistry.deployed();
@@ -29,10 +29,10 @@ describe("CommunityRegistry contract", function () {
             defaultAdminRole, deployer.address)).to.be.true;
     });
 
-    it("should protect grantMembership from anyone not w/ GRANTER_ROLE", async function () {
+    it("should protect grantMembership from anyone not w/ REGISTERER_ROLE", async function () {
         expectedErrorMessage = "AccessControl: account " + 
         deployer.address.toString().toLowerCase()
-        + " is missing role " + granterRole;
+        + " is missing role " + registererRole;
 
         await expect(
             communityRegistry.grantMembershipTo(a1.address)
@@ -40,7 +40,7 @@ describe("CommunityRegistry contract", function () {
     });
 
     it("should have a minimum of 120,000 ether (COMS) for granting membership", async function () {
-        await communityRegistry.grantRole(granterRole, a1.address);
+        await communityRegistry.grantRole(registererRole, a1.address);
 
         expectedErrorMessage = "Membership has a price of at least 120,000.";
 
@@ -50,7 +50,7 @@ describe("CommunityRegistry contract", function () {
     });
 
     it("should emit that membership was given", async function () {
-        await communityRegistry.grantRole(granterRole, a1.address);
+        await communityRegistry.grantRole(registererRole, a1.address);
 
         await expect(communityRegistry.connect(a1).grantMembershipTo(
             a2.address, {value: sendValue})).to.emit(
@@ -60,7 +60,7 @@ describe("CommunityRegistry contract", function () {
     });
 
     it("should grant membership by NFT", async function () {
-        await communityRegistry.grantRole(granterRole, a1.address);
+        await communityRegistry.grantRole(registererRole, a1.address);
 
         await communityRegistry.connect(a1).grantMembershipTo(a2.address, {value: sendValue});
 

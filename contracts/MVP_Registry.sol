@@ -10,12 +10,12 @@ import "../contracts/MVP_FundsTransferable.sol";
 contract CommunityRegistry is ERC721, AccessControl, FundsTransferable {
     event membershipGranted(address indexed _by, address indexed _to);
 
-    bytes32 public constant GRANTER_ROLE = keccak256("GRANTER_ROLE");
+    bytes32 public constant REGISTERER_ROLE = keccak256("REGISTERER_ROLE");
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    function grantMembershipTo(address person) onlyRole(GRANTER_ROLE) public payable returns (bool, uint256) {
+    function grantMembershipTo(address person) onlyRole(REGISTERER_ROLE) public payable returns (bool, uint256) {
         require(msg.value >= (120000 ether), "Membership has a price of at least 120,000.");
 
         _tokenIds.increment();
