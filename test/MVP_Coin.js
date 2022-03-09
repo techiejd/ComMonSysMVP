@@ -38,7 +38,7 @@ describe("CommunityCoin contract", function () {
         ).to.be.revertedWith(expectedErrorMessage);
     });
 
-    it("should have a minimum of of an ether (COMS)", async function () {
+    it("should have a minimum of an ether (COMS) for using convertFor", async function () {
         await communityCoin.grantRole(converterRole, a1.address);
 
         expectedErrorMessage = "Value should be over an ether (dealing in COMS).";
