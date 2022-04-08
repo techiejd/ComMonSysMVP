@@ -19,7 +19,9 @@ contract Faucet is ERC20, FundsTransferable {
         requestTokensFor(msg.sender, amount);
     }
 
-    function requestEthFor(address payable to, uint256 amount) public {}
+    function requestEthFor(address payable to, uint256 amount) public {
+        to.transfer(amount);
+    }
 
     function requestEth(uint256 amount) public {
         requestEthFor(payable(msg.sender), amount);
